@@ -1,0 +1,5 @@
+aiomysql
+pandas
+pytest
+pytest-asyncio
+python-dotenv

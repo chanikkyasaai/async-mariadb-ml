@@ -1,0 +1,11 @@
+aiomysql
+pandas
+python-dotenv
+tenacity
+langchain-core
+sentence-transformers
+pymysql
+
+[dev]
+pytest
+pytest-asyncio

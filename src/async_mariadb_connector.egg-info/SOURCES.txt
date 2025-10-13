@@ -1,0 +1,15 @@
+README.md
+pyproject.toml
+src/async_mariadb_connector/__init__.py
+src/async_mariadb_connector/bulk.py
+src/async_mariadb_connector/config.py
+src/async_mariadb_connector/core.py
+src/async_mariadb_connector/dataframe.py
+src/async_mariadb_connector/exceptions.py
+src/async_mariadb_connector.egg-info/PKG-INFO
+src/async_mariadb_connector.egg-info/SOURCES.txt
+src/async_mariadb_connector.egg-info/dependency_links.txt
+src/async_mariadb_connector.egg-info/requires.txt
+src/async_mariadb_connector.egg-info/top_level.txt
+tests/test_async_mariadb.py
+tests/test_bulk_ops.py

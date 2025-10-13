@@ -1,0 +1,66 @@
+Metadata-Version: 2.4
+Name: async-mariadb-connector
+Version: 0.1.0
+Summary: A lightweight, async-enabled Python library for MariaDB, optimized for AI/ML and data workflows.
+Author-email: Chanikya Nelapatla <your-email@example.com>
+License: MIT License
+Classifier: Development Status :: 4 - Beta
+Classifier: Intended Audience :: Developers
+Classifier: License :: OSI Approved :: MIT License
+Classifier: Programming Language :: Python :: 3
+Classifier: Programming Language :: Python :: 3.8
+Classifier: Programming Language :: Python :: 3.9
+Classifier: Programming Language :: Python :: 3.10
+Classifier: Programming Language :: Python :: 3.11
+Classifier: Topic :: Database
+Classifier: Topic :: Software Development :: Libraries :: Python Modules
+Requires-Python: >=3.8
+Description-Content-Type: text/markdown
+Requires-Dist: aiomysql
+Requires-Dist: pandas
+Requires-Dist: python-dotenv
+Requires-Dist: tenacity
+Requires-Dist: langchain-core
+Requires-Dist: sentence-transformers
+Requires-Dist: pymysql
+Provides-Extra: dev
+Requires-Dist: pytest; extra == "dev"
+Requires-Dist: pytest-asyncio; extra == "dev"
+
+# Async MariaDB Connector
+
+A lightweight, async-enabled Python library that integrates MariaDB seamlessly into Python data workflows — optimized for AI/ML tasks.
+
+## Setup
+
+1.  Create a virtual environment:
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+    ```
+
+2.  Install dependencies:
+    ```bash
+    pip install -r requirements.txt
+    ```
+
+3.  Set up your database credentials in a `.env` file (copy from `.env.example`).
+
+## Usage
+
+See the `examples/` directory for demo scripts:
+- `demo_async_dataframe.py`: Basic async queries and DataFrame conversion.
+- `demo_bulk_embeddings.py`: High-speed bulk insertion of binary data.
+- `demo_streaming.py`: Memory-efficient streaming of large datasets.
+- `demo_langchain_rag.py`: Integration with LangChain for a RAG pipeline.
+- `benchmark_sync_vs_async.py`: Performance comparison against a synchronous driver.
+
+## Features
+
+- **Async Core**: Built on `aiomysql` for non-blocking database operations.
+- **Connection Pooling**: Efficiently manages and reuses database connections.
+- **DataFrame Integration**: Convert query results to Pandas DataFrames and bulk insert from them.
+- **Streaming API**: Fetch large datasets row-by-row without high memory usage using `fetch_stream()`.
+- **Robust Error Handling**: Custom exceptions and automatic retry logic for transient connection errors.
+- **LangChain Support**: Includes a sample `MariaDBVectorStore` for AI/ML applications.
+- **Benchmarking**: A script to prove the performance benefits of async I/O.
