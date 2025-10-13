@@ -1,8 +1,7 @@
 # Async MariaDB Connector
 
-[![PyPI version](https://img.shields.io/pypi/v/async-mariadb-connector.svg)](https://pypi.org/project/async-mariadb-connector/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python Version](https://img.shields.io/pypi/pyversions/async-mariadb-connector.svg)](https://pypi.org/project/async-mariadb-connector)
+
 
 A lightweight, production-grade, and asynchronous Python connector for MariaDB, designed for high-performance data operations in modern AI/ML and web applications.
 
