@@ -9,7 +9,7 @@ This document outlines the performance benchmarks for the `async-mariadb-connect
 -   **MariaDB Version:** 11.8.3
 -   **Python Version:** 3.11.3
 -   **`aiomysql` Version:** 0.2.0
--   **`PyMySQL` Version:** [Version, e.g., 1.1.0]
+-   **`PyMySQL` Version:** 1.1.2
 
 ## Benchmark: Bulk Inserts
 
