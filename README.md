@@ -1,4 +1,4 @@
-# Async MariaDB Connector
+# Async MariaDB Python Connector
 
 [![PyPI version](https://img.shields.io/badge/pypi-0.1.0-blue)](https://pypi.org/project/async-mariadb-connector/)
 [![Python Version](https://img.shields.io/badge/python-3.9%2B-blue.svg)](https://pypi.org/project/async-mariadb-connector)
