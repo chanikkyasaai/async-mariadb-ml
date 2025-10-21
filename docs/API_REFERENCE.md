@@ -37,6 +37,33 @@ Executes a single SQL query (e.g., `INSERT`, `UPDATE`, `CREATE`).
     -   `params` (tuple, optional): A tuple of parameters to be safely substituted into the query.
 -   **Returns:** The number of affected rows.
 
+### `async def executemany(self, query: str, params_list: List[tuple], commit: bool = True) -> int`
+
+Executes a query with multiple parameter sets in a single batch operation. This is **much more efficient** than calling `execute()` in a loop.
+
+-   **Parameters:**
+    -   `query` (str): The SQL query with placeholders (e.g., `"INSERT INTO users (name, age) VALUES (%s, %s)"`).
+    -   `params_list` (List[tuple]): A list of parameter tuples, one for each execution.
+    -   `commit` (bool, optional): Whether to commit the transaction. Default: `True`.
+-   **Returns:** Total number of affected rows.
+
+**Example:**
+```python
+# Batch insert multiple users
+data = [
+    ("Alice", 25),
+    ("Bob", 30),
+    ("Charlie", 35)
+]
+rows = await db.executemany(
+    "INSERT INTO users (name, age) VALUES (%s, %s)",
+    data
+)
+print(f"Inserted {rows} rows")
+```
+
+**Performance Note:** For bulk operations, `executemany()` is significantly faster than a loop because it sends all data in a single batch to the database.
+
 ### `async def fetch_one(self, query: str, params: tuple = None) -> dict`
 
 Executes a query and fetches the first result as a dictionary.

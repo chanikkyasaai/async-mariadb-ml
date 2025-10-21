@@ -135,6 +135,18 @@ async def main():
         all_users_df = await db.fetch_all_df("SELECT * FROM users")
         print("All users:")
         print(all_users_df)
+        
+        # Batch insert multiple rows efficiently
+        users_to_insert = [
+            ("Alice", 25, "alice@example.com"),
+            ("Bob", 30, "bob@example.com"),
+            ("Charlie", 35, "charlie@example.com")
+        ]
+        rows = await db.executemany(
+            "INSERT INTO users (name, age, email) VALUES (%s, %s, %s)",
+            users_to_insert
+        )
+        print(f"Inserted {rows} users")
 
     finally:
         await db.close()

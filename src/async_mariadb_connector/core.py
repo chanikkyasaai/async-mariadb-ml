@@ -89,6 +89,45 @@ class AsyncMariaDB:
             logger.error(f"Query failed: {query} | Error: {e}")
             raise QueryError("Query execution failed.") from e
 
+    async def executemany(self, query: str, params_list: List[tuple], commit: bool = True) -> int:
+        """
+        Execute a query with multiple parameter sets (bulk operation).
+        
+        This is ideal for batch inserts, updates, or deletes where you have
+        the same query structure but multiple sets of parameters.
+        
+        Args:
+            query: SQL query with placeholders (e.g., "INSERT INTO users (name, age) VALUES (%s, %s)")
+            params_list: List of parameter tuples, one for each execution
+            commit: Whether to commit the transaction (default: True)
+        
+        Returns:
+            Total number of affected rows
+        
+        Example:
+            >>> data = [("Alice", 25), ("Bob", 30), ("Charlie", 35)]
+            >>> rows = await db.executemany(
+            ...     "INSERT INTO users (name, age) VALUES (%s, %s)",
+            ...     data
+            ... )
+            >>> print(f"Inserted {rows} rows")
+        
+        Note:
+            This is much more efficient than calling execute() in a loop,
+            as it sends all data in a single batch to the database.
+        """
+        pool = await self._get_pool()
+        try:
+            async with pool.acquire() as conn:
+                async with conn.cursor() as cur:
+                    await cur.executemany(query, params_list)
+                    if commit and not self.db_config['autocommit']:
+                        await conn.commit()
+                    return cur.rowcount
+        except Exception as e:
+            logger.error(f"Batch query failed: {query} | Error: {e}")
+            raise QueryError("Batch query execution failed.") from e
+
     async def fetch(self, query: str, params: Optional[tuple] = None) -> List[Dict[str, Any]]:
         """
         Fetch all rows from a SELECT query.

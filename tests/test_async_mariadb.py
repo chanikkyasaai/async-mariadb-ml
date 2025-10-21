@@ -65,3 +65,39 @@ async def test_query_error(db: AsyncMariaDB):
     """Test that a query with a syntax error raises a QueryError."""
     with pytest.raises(QueryError):
         await db.fetch("SELECT * FORM test_table")  # Intentional syntax error
+
+
+@pytest.mark.asyncio
+async def test_executemany(db: AsyncMariaDB):
+    """Test batch insert using executemany."""
+    await db.execute("CREATE TABLE IF NOT EXISTS batch_test (id INT, name VARCHAR(50), age INT)")
+    
+    try:
+        # Prepare batch data
+        data = [
+            (1, "Alice", 25),
+            (2, "Bob", 30),
+            (3, "Charlie", 35),
+            (4, "David", 40),
+            (5, "Eve", 45)
+        ]
+        
+        # Execute batch insert
+        rows_affected = await db.executemany(
+            "INSERT INTO batch_test (id, name, age) VALUES (%s, %s, %s)",
+            data
+        )
+        
+        # Verify row count
+        assert rows_affected == 5
+        
+        # Verify data was inserted correctly
+        results = await db.fetch_all("SELECT * FROM batch_test ORDER BY id")
+        assert len(results) == 5
+        assert results[0]['name'] == "Alice"
+        assert results[0]['age'] == 25
+        assert results[4]['name'] == "Eve"
+        assert results[4]['age'] == 45
+        
+    finally:
+        await db.execute("DROP TABLE batch_test")
