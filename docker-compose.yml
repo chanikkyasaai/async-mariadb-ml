@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  mariadb:
+    image: mariadb:11.8.3
+    container_name: async-mariadb-dev
+    restart: unless-stopped
+    ports:
+      - "3307:3306"
+    environment:
+      MARIADB_ROOT_PASSWORD: ${DB_PASSWORD:-root}
+      MARIADB_DATABASE: ${DB_NAME:-test_db}
+      MARIADB_USER: ${DB_USER:-appuser}
+      MARIADB_PASSWORD: ${DB_PASSWORD:-root}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    command: >
+      --character-set-server=utf8mb4
+      --collation-server=utf8mb4_unicode_ci
+      --sql-mode=STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION
+      --max-connections=200
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 5s
+      timeout: 2s
+      retries: 20
+      start_period: 30s
+    networks:
+      - mariadb-net
+
+  # Optional: app service to run examples
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: async-mariadb-app
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    environment:
+      DB_HOST: mariadb
+      DB_PORT: 3306
+      DB_USER: ${DB_USER:-appuser}
+      DB_PASSWORD: ${DB_PASSWORD:-root}
+      DB_NAME: ${DB_NAME:-test_db}
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: tail -f /dev/null  # Keep container running for interactive use
+    networks:
+      - mariadb-net
+    profiles:
+      - full  # Only start with: docker-compose --profile full up
+
+volumes:
+  mariadb_data:
+    driver: local
+
+networks:
+  mariadb-net:
+    driver: bridge
