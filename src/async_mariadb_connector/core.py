@@ -195,6 +195,39 @@ class AsyncMariaDB:
             logger.error(f"Failed to fetch data into DataFrame: {e}")
             raise QueryError(f"Failed to fetch data into DataFrame: {e}") from e
 
+    def get_pool_stats(self) -> Dict[str, int]:
+        """
+        Get connection pool statistics for monitoring and debugging.
+        
+        Returns:
+            Dictionary with pool metrics:
+            - 'size': Current number of connections in the pool
+            - 'max_size': Maximum allowed connections
+            - 'min_size': Minimum maintained connections
+            - 'in_use': Number of connections currently in use
+            - 'available': Number of free connections available
+        
+        Example:
+            >>> stats = db.get_pool_stats()
+            >>> print(f"Pool: {stats['in_use']}/{stats['size']} in use")
+            >>> if stats['available'] == 0:
+            ...     logger.warning("Connection pool exhausted!")
+        
+        Note:
+            Useful for production monitoring, alerting, and capacity planning.
+            Integrate with Prometheus, Grafana, or CloudWatch for observability.
+        """
+        if self._pool is None:
+            raise ConnectionError("Connection pool not initialized. Call connect() first or use async context manager.")
+        
+        return {
+            'size': self._pool.size,
+            'max_size': self._pool.maxsize,
+            'min_size': self._pool.minsize,
+            'in_use': self._pool.size - self._pool.freesize,
+            'available': self._pool.freesize
+        }
+
     async def close(self):
         """
         Gracefully close the connection pool.

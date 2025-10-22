@@ -101,3 +101,36 @@ async def test_executemany(db: AsyncMariaDB):
         
     finally:
         await db.execute("DROP TABLE batch_test")
+
+@pytest.mark.asyncio
+async def test_get_pool_stats(db: AsyncMariaDB):
+    """Test connection pool statistics monitoring."""
+    # Get pool stats
+    stats = db.get_pool_stats()
+    
+    # Verify all required keys are present
+    assert 'size' in stats
+    assert 'max_size' in stats
+    assert 'min_size' in stats
+    assert 'in_use' in stats
+    assert 'available' in stats
+    
+    # Verify types are integers
+    assert isinstance(stats['size'], int)
+    assert isinstance(stats['max_size'], int)
+    assert isinstance(stats['min_size'], int)
+    assert isinstance(stats['in_use'], int)
+    assert isinstance(stats['available'], int)
+    
+    # Verify logical constraints
+    assert stats['size'] >= 0
+    assert stats['max_size'] > 0
+    assert stats['min_size'] >= 0
+    assert stats['in_use'] >= 0
+    assert stats['available'] >= 0
+    assert stats['size'] == stats['in_use'] + stats['available']
+    assert stats['size'] <= stats['max_size']
+    assert stats['min_size'] <= stats['max_size']
+    
+    # Test that pool is functional (at least one connection available)
+    assert stats['size'] > 0, "Pool should have at least one connection"

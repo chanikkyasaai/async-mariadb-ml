@@ -1,6 +1,6 @@
 """Async MariaDB Connector - A lightweight, async-enabled Python library for MariaDB."""
 
-__version__ = "0.1.0"
+__version__ = "0.1.2"
 
 from .core import AsyncMariaDB
 from .dataframe import to_dataframe

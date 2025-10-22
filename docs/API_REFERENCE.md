@@ -91,6 +91,33 @@ Executes a query and returns the results as a pandas DataFrame.
     -   `params` (tuple, optional): Parameters for the query.
 -   **Returns:** A pandas DataFrame.
 
+### `def get_pool_stats(self) -> Dict[str, int]`
+
+Returns connection pool statistics for production monitoring and observability.
+
+-   **Returns:** A dictionary containing:
+    -   `size` (int): Current total connections in the pool
+    -   `max_size` (int): Maximum allowed connections
+    -   `min_size` (int): Minimum maintained connections
+    -   `in_use` (int): Connections currently executing queries
+    -   `available` (int): Idle connections available for use
+
+**Example:**
+```python
+# Monitor pool health in production
+stats = db.get_pool_stats()
+print(f"Pool utilization: {stats['in_use']}/{stats['size']}")
+
+# Alert on pool exhaustion
+if stats['available'] == 0:
+    logger.warning("Connection pool exhausted!")
+    
+# Integrate with monitoring systems (Prometheus, Grafana, CloudWatch)
+pool_utilization_metric.set(stats['in_use'] / stats['max_size'])
+```
+
+**Production Note:** Monitor `available` connections to detect pool exhaustion before it impacts application performance. If frequently hitting max_size, consider increasing pool capacity or optimizing query execution time.
+
 ### `async def fetch_stream(self, query: str, params: tuple = None) -> AsyncGenerator[dict, None]`
 
 Executes a query and streams the results one row at a time. This is useful for large datasets.

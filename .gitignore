@@ -166,7 +166,11 @@ temp/
 *.tmp
 
 # Internal/Planning files (not for public repo)
+sum-docs/
+langchain_pr/
+PYPI_PUBLISH.md
+.pypirc
+TEST_COVERAGE_REPORT.md
+IMPLEMENTATION_SUMMARY.md
 LANGCHAIN_PR_GUIDE.md
-LANGCHAIN_PR_NOTEBOOK.ipynb
-*_PR_GUIDE.md
-*_PR_*.ipynb
+SUMMARY.md
